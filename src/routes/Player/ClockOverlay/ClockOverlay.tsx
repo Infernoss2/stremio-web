@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import React, { useEffect, useState } from 'react';
-import { useOsdClock, formatClockTime } from 'stremio/common';
+import { formatClockTime } from './helpers';
 import styles from './ClockOverlay.less';
 
 type Props = {
@@ -9,16 +9,14 @@ type Props = {
 };
 
 const ClockOverlay = ({ className }: Props) => {
-    const { format } = useOsdClock();
-    const [time, setTime] = useState(() => formatClockTime(format));
+    const [time, setTime] = useState(() => formatClockTime());
 
     useEffect(() => {
-        setTime(formatClockTime(format));
         const interval = window.setInterval(() => {
-            setTime(formatClockTime(format));
+            setTime(formatClockTime());
         }, 1000);
         return () => window.clearInterval(interval);
-    }, [format]);
+    }, []);
 
     return (
         <div className={className}>

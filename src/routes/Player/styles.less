@@ -23,6 +23,11 @@ html:not(.active-slider-within) {
             opacity: 0;
             transition: opacity 200ms;
         }
+
+        // inverse of the layers above: the clock only shows once the overlay UI is hidden
+        .clock-overlay-layer {
+            opacity: 1;
+        }
     }
 }
 
@@ -102,21 +107,12 @@ html:not(.active-slider-within) {
             bottom: initial;
             display: flex;
             align-items: flex-start;
+            justify-content: flex-end;
             padding: 1.5rem;
             background: transparent;
             pointer-events: none;
-
-            &.top-left {
-                justify-content: flex-start;
-            }
-
-            &.top-center {
-                justify-content: center;
-            }
-
-            &.top-right {
-                justify-content: flex-end;
-            }
+            opacity: 0;
+            transition: opacity 200ms;
         }
 
         &.control-bar-layer {

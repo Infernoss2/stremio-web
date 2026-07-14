@@ -9,7 +9,7 @@ const { usePlatform, useToast } = require('stremio/common');
 const Option = require('./Option');
 const styles = require('./styles');
 
-const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }, ref) => {
+const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId, osdClockEnabled, onToggleOsdClock }, ref) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
@@ -153,6 +153,11 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
                     :
                     null
             }
+            <Option
+                icon={osdClockEnabled ? 'checkmark' : 'clock'}
+                label={t('SETTINGS_PLAYER_SHOW_CLOCK')}
+                onClick={onToggleOsdClock}
+            />
             {
                 streamingUrl && externalDevices.map(({ id, name }) => (
                     <Option
@@ -175,6 +180,8 @@ OptionsMenu.propTypes = {
     playbackDevices: PropTypes.array,
     extraSubtitlesTracks: PropTypes.array,
     selectedExtraSubtitlesTrackId: PropTypes.string,
+    osdClockEnabled: PropTypes.bool,
+    onToggleOsdClock: PropTypes.func,
 };
 
 module.exports = OptionsMenu;

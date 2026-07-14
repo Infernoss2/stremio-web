@@ -11,7 +11,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity, useOsdClock } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
@@ -86,7 +86,6 @@ const Player = () => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
-    const { enabled: osdClockEnabled, position: osdClockPosition } = useOsdClock();
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
@@ -101,6 +100,7 @@ const Player = () => {
     const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
+    const [osdClockEnabled, , , toggleOsdClock] = useBinaryState(false);
 
     const menusOpen = React.useMemo(() => {
         return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
@@ -852,7 +852,7 @@ const Player = () => {
             {
                 fullscreen && osdClockEnabled ?
                     <ClockOverlay
-                        className={classnames(styles['layer'], styles['clock-overlay-layer'], styles[osdClockPosition])}
+                        className={classnames(styles['layer'], styles['clock-overlay-layer'])}
                     />
                     :
                     null
@@ -864,6 +864,8 @@ const Player = () => {
                     playbackDevices={playbackDevices}
                     extraSubtitlesTracks={extraSubtitleTracks}
                     selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
+                    osdClockEnabled={osdClockEnabled}
+                    onToggleOsdClock={toggleOsdClock}
                 />
             </ContextMenu>
             <HorizontalNavBar
@@ -980,6 +982,8 @@ const Player = () => {
                     playbackDevices={playbackDevices}
                     extraSubtitlesTracks={extraSubtitleTracks}
                     selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
+                    osdClockEnabled={osdClockEnabled}
+                    onToggleOsdClock={toggleOsdClock}
                 />
             </Transition>
         </div>

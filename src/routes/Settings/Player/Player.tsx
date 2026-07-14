@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ColorInput, MultiselectMenu, Toggle } from 'stremio/components';
-import { usePlatform, useOsdClock } from 'stremio/common';
+import { usePlatform } from 'stremio/common';
 import { Category, Option, Section } from '../components';
 import usePlayerOptions from './usePlayerOptions';
 
@@ -10,7 +9,6 @@ type Props = {
 };
 
 const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
-    const { t } = useTranslation();
     const { shell } = usePlatform();
     const platform = usePlatform();
 
@@ -34,29 +32,6 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         videoModeSelect,
         pauseOnMinimizeToggle,
     } = usePlayerOptions(profile);
-
-    const {
-        enabled: osdClockEnabled,
-        format: osdClockFormat,
-        position: osdClockPosition,
-        setEnabled: setOsdClockEnabled,
-        setFormat: setOsdClockFormat,
-        setPosition: setOsdClockPosition,
-    } = useOsdClock();
-
-    // Real i18n keys (to be submitted to stremio-translations later); t() falls back to
-    // the key string itself when the key is missing, so the UI still shows readable text.
-    const osdClockFormatOptions = [
-        { label: t('SETTINGS_OSD_CLOCK_FORMAT_AUTO'), value: 'auto' },
-        { label: t('SETTINGS_OSD_CLOCK_FORMAT_12H'), value: '12h' },
-        { label: t('SETTINGS_OSD_CLOCK_FORMAT_24H'), value: '24h' },
-    ];
-
-    const osdClockPositionOptions = [
-        { label: t('SETTINGS_OSD_CLOCK_POSITION_TOP_LEFT'), value: 'top-left' },
-        { label: t('SETTINGS_OSD_CLOCK_POSITION_TOP_CENTER'), value: 'top-center' },
-        { label: t('SETTINGS_OSD_CLOCK_POSITION_TOP_RIGHT'), value: 'top-right' },
-    ];
 
     return (
         <Section ref={ref} label={'SETTINGS_NAV_PLAYER'}>
@@ -138,33 +113,6 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     <MultiselectMenu
                         className={'multiselect'}
                         {...nextVideoPopupDurationSelect}
-                    />
-                </Option>
-            </Category>
-            <Category icon={'clock'} label={'SETTINGS_SECTION_OSD_CLOCK'}>
-                <Option label={'SETTINGS_OSD_CLOCK_SHOW'}>
-                    <Toggle
-                        tabIndex={-1}
-                        checked={osdClockEnabled}
-                        onClick={() => setOsdClockEnabled(!osdClockEnabled)}
-                    />
-                </Option>
-                <Option label={'SETTINGS_OSD_CLOCK_FORMAT'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        options={osdClockFormatOptions}
-                        value={osdClockFormat}
-                        disabled={!osdClockEnabled}
-                        onSelect={setOsdClockFormat}
-                    />
-                </Option>
-                <Option label={'SETTINGS_OSD_CLOCK_POSITION'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        options={osdClockPositionOptions}
-                        value={osdClockPosition}
-                        disabled={!osdClockEnabled}
-                        onSelect={setOsdClockPosition}
                     />
                 </Option>
             </Category>
